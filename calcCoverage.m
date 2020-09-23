@@ -17,6 +17,8 @@ bitmask = a>0.5;
 res=a;
 res(bitmask) = 1;
 
+a=res;
+
 [total_cameras, two] = size(cameras);
 for l = 1:total_cameras
     def = [cameras(l,1), cameras(l,2)];
@@ -26,7 +28,7 @@ for l = 1:total_cameras
             if(i==def(1) && j==def(2))
                 continue;
             end
-            if(anyWallInBetween(a,pt,def)==false && a(pt(1),pt(2))>0.9 && inRange(pt,def,range))
+            if(anyWallInBetween(a,pt,def)==false && a(pt(1),pt(2))==1 && inRange(pt,def,range))
                 a(pt(1),pt(2)) = 0.5;
             end
         end
@@ -38,14 +40,14 @@ totalGrey = 0;
 totalBlack = 0;
 for i=1:r
     for j=1:c
-        if(a(i,j)>=0.8) 
+        if(a(i,j)==1) 
             totalWhites = totalWhites+1;
             continue;
         end
-        if(a(i,j)>0.4 && a(i,j)<0.6)
+        if(a(i,j)==0.5)
             totalGrey = totalGrey+1;
         end
-        if(a(i,j)<0.3)
+        if(a(i,j)==0)
             totalBlack = totalBlack+1;
         end
     end
@@ -92,7 +94,7 @@ if(z(1)>=z(2))
         if(abs(fix(i+pt2(1)))==0 || abs(fix(i*inc*k+pt2(2)))==0)
             continue;
         end;
-        if(arr(abs(fix(i+pt2(1))),abs(fix(i*inc*k+pt2(2))))<0.4)
+        if(arr(abs(fix(i+pt2(1))),abs(fix(i*inc*k+pt2(2))))==0)
             t2f = true;
         end
     end        
@@ -107,7 +109,7 @@ if(z(1)<z(2))
        if(abs(fix(i*inc*k+pt2(1)))==0 || abs(fix(i+pt2(2)))==0)
            continue;
        end
-        if(arr(abs(fix(i*inc*k+pt2(1))),abs(fix(i+pt2(2))))<0.4)
+        if(arr(abs(fix(i*inc*k+pt2(1))),abs(fix(i+pt2(2))))==0)
             t2f = true;
         end
    end
