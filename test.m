@@ -1,1 +1,2 @@
-c = calcCoverage("FloorWork.tif", [100,270; 150,80; 60,200], 110)
+c = calcCoverage("FloorWork.tif", [70,270; 170,80; 154,323; 116, 182], 200);
+combination_Removal("FloorWork.tif", [70,270; 170,80; 154,323; 116, 182], 200, 1)
