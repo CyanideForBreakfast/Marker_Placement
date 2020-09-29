@@ -24,6 +24,7 @@ function [coverage]  = calcCoverage(tifFilename, markerPositions, markerRange)
     [total_cameras, two] = size(cameras);
     for l = 1:total_cameras
         def = [cameras(l,1), cameras(l,2)];
+        a(def(1),def(2)) = 0.5;
         for i = 1:r
             for j = 1:c
                 pt = [i,j];
