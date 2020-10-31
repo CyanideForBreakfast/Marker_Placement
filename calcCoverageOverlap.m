@@ -1,9 +1,11 @@
-function [coverage]  = calcCoverage(tifFilename, markerPositions, markerRange)
+
+function [coverage,overlapPercent]  = calcCoverageOverlap(tifFilename, markerPositions, markerRange)
 
     x = imread(tifFilename); 
     xd = im2double(rgb2gray(x));
     a = xd;
     [r,c] = size(a);
+    overlapMatrix = zeros(r,c);
 
 
     cameras  = markerPositions; % list of cameras with coordinates
@@ -31,30 +33,24 @@ function [coverage]  = calcCoverage(tifFilename, markerPositions, markerRange)
                 if(i==def(1) && j==def(2))
                     continue;
                 end
-                if(anyWallInBetween(a,pt,def)==false && a(pt(1),pt(2))==1 && inRange(pt,def,range))
+                if(anyWallInBetween(a,pt,def)==false && a(pt(1),pt(2))~=0 && inRange(pt,def,range))
                     a(pt(1),pt(2)) = 0.5;
+                    if(overlapMatrix(pt(1),pt(2))==1)
+                        overlapMatrix(pt(1),pt(2))=2;
+                    end
+                    if(overlapMatrix(pt(1),pt(2))==0)
+                        overlapMatrix(pt(1),pt(2))=1;
+                    end
                 end
             end
         end
     end
     % calculate percentage
-    totalWhites = 0;
-    totalGrey = 0;
-    totalBlack = 0;
-    for i=1:r
-        for j=1:c
-            if(a(i,j)==1) 
-                totalWhites = totalWhites+1;
-                continue;
-            end
-            if(a(i,j)==0.5)
-                totalGrey = totalGrey+1;
-            end
-            if(a(i,j)==0)
-                totalBlack = totalBlack+1;
-            end
-        end
-    end
+    totalWhites = nnz(a==1);
+    totalGrey = nnz(a==0.5);
+    totalBlack = nnz(a==0);
+    
+    overlapNum = nnz(overlapMatrix==2);
 
     %fprintf("Coverage: %f\n",totalGrey/(totalWhites+totalGrey));
 
@@ -72,6 +68,7 @@ function [coverage]  = calcCoverage(tifFilename, markerPositions, markerRange)
     end
     
     coverage = totalGrey/(totalWhites+totalGrey);
+    overlapPercent = overlapNum/(totalWhites+totalGrey);
     imshow(a);
 end
 
