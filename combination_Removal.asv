@@ -26,6 +26,7 @@ function [res,o] = testCombination(tifFilename, markerPositions, range, threshol
                 end
             end
         end
+        o=maxOverlap;
     else
         for index = startIndex:totalMarkers
             [temp,tempO] = testCombination(tifFilename, markerPositions, range, threshold, [list;markerPositions(index,1),markerPositions(index,2)], index+1, totalMarkers, markersAllowed-1);
@@ -35,8 +36,8 @@ function [res,o] = testCombination(tifFilename, markerPositions, range, threshol
                     res.list=temp.list;
                     maxOverlap = tempO;
                 end
+                break;
             end
         end
     end
-    o = maxOverlap;
 end
